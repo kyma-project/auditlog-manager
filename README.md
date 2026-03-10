@@ -1,3 +1,10 @@
+[![REUSE status](https://api.reuse.software/badge/github.com/kyma-project/registry-cache)](https://api.reuse.software/info/github.com/kyma-project/auditlog-manager)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kyma-project/registry-cache)](https://goreportcard.com/report/github.com/kyma-project/auditlog-manager)
+[![unit tests](https://badgers.space/github/checks/kyma-project/registry-cache/main/unit-tests)](https://github.com/kyma-project/auditlog-manager/actions/workflows/unit-tests.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/kyma-project/registry-cache/badge.svg?branch=main)](https://coveralls.io/github/kyma-project/auditlog-manager?branch=main)
+[![golangci lint](https://badgers.space/github/checks/kyma-project/registry-cache/main/golangci-lint)](https://github.com/kyma-project/auditlog-manager/actions/workflows/lint.yaml)
+[![latest release](https://badgers.space/github/release/kyma-project/registry-cache)](https://github.com/kyma-project/auditlog-manager/releases/latest)
+
 > **NOTE:** This is a general template that you can use for a project README.md. Except for the mandatory sections, use only those sections that suit your use case but keep the proposed section order.
 >
 > Mandatory sections: 
