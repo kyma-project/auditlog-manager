@@ -1,0 +1,224 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.20.1
+  name: auditlogs.auditlogmanager.kyma-project.io
+spec:
+  group: auditlogmanager.kyma-project.io
+  names:
+    kind: AuditLog
+    listKind: AuditLogList
+    plural: auditlogs
+    singular: auditlog
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: State of the AuditLog
+      jsonPath: .status.state
+      name: State
+      type: string
+    - description: BTP Region
+      jsonPath: .spec.region
+      name: Region
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: AuditLog is the Schema for the auditlogs API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AuditLogSpec defines the desired state of AuditLog
+            properties:
+              administrators:
+                description: Administrators is the list of admin email addresses for
+                  the subaccount
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              config:
+                description: Config contains configuration for audit log service
+                properties:
+                  configMapRef:
+                    description: ConfigMapRef is the name of ConfigMap containing
+                      audit log policies
+                    type: string
+                  gardenerSecretName:
+                    description: GardenerSecretName is the name of Gardener secret
+                      with write credentials
+                    type: string
+                  serviceURL:
+                    description: ServiceURL is the Audit Log Service URL
+                    type: string
+                  tenantID:
+                    description: TenantID is the tenant ID for the audit log service
+                    type: string
+                type: object
+              globalAccountID:
+                description: GlobalAccountID is the BTP global account ID where the
+                  subaccount will be created
+                minLength: 1
+                type: string
+              readCredentials:
+                description: ReadCredentials contains read-only credentials stored
+                  directly in the resource
+                properties:
+                  password:
+                    description: Password for read access (base64 encoded)
+                    type: string
+                  url:
+                    description: URL is the audit log read endpoint
+                    type: string
+                  username:
+                    description: Username for read access
+                    type: string
+                type: object
+              region:
+                description: Region is the BTP region where the audit log subaccount
+                  is provisioned
+                type: string
+              retentionDays:
+                default: 90
+                description: 'RetentionDays is the retention period in days (default:
+                  90)'
+                type: integer
+              subaccountID:
+                description: SubaccountID is the BTP subaccount ID (provisioned by
+                  controller)
+                type: string
+            required:
+            - administrators
+            - globalAccountID
+            - region
+            type: object
+          status:
+            description: status defines the observed state of AuditLog
+            properties:
+              assignedAt:
+                description: assignedAt is the timestamp when the AuditLog was assigned
+                  to a runtime
+                format: date-time
+                type: string
+              assignedToRuntime:
+                description: assignedToRuntime is the runtime ID this AuditLog is
+                  assigned to (empty when in pool)
+                type: string
+              conditions:
+                description: conditions represent the current state of the AuditLog
+                  resource.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              createdAt:
+                description: createdAt is the timestamp when the AuditLog was created
+                format: date-time
+                type: string
+              orphanedAt:
+                description: orphanedAt is the timestamp when the AuditLog became
+                  orphaned
+                format: date-time
+                type: string
+              state:
+                allOf:
+                - enum:
+                  - Pending
+                  - RegistrationReady
+                  - SimApproved
+                  - Assigned
+                  - Orphaned
+                - enum:
+                  - Pending
+                  - RegistrationReady
+                  - SimApproved
+                  - Assigned
+                  - Orphaned
+                default: Pending
+                description: state represents the current state of the AuditLog resource.
+                type: string
+            required:
+            - state
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
